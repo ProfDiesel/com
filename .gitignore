@@ -1,0 +1,6 @@
+node_modules/
+*.egg-info/
+**/__pycache__/
+dist/
+coverage/
+package-lock.json

@@ -1,0 +1,51 @@
+# https://editor.swagger.io/
+# https://swagger.io/docs/specification/components/
+
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+servers:
+  - url: http://petstore.swagger.io/v1
+
+{% macro json_type(annotation) -%}
+  {%- if annotation is string_type -%} string
+  {%- elif annotation is record_type -%} {{ annotation.__name__ }}
+  {%- elif annotation is sub_type -%} {{ annotation.__name__ }}
+  {%- elif annotation is array_type -%} {{ json_type(annotation | type_arg) }}List
+  {%- else -%} {{ annotation.__name__ }}
+  {%- endif -%}
+{%- endmacro -%}
+
+components:
+  schemas:
+{% for annotation in walk() %}
+  {%- if annotation is record_type %}
+    {{ annotation.__name__ }}:
+      type: object
+      properties:
+    {%- for field in (annotation | fields) %}
+        {{ field.name }}:
+          type: {{ json_type(field.type) }}
+    {%- endfor %}
+  {% elif annotation is array_type %}
+    {{ json_type(annotation | type_arg) }}List:
+      type: array
+      items:
+        $ref: '#/components/schemas/{{ json_type(annotation | type_arg) }}'
+  {%- endif %}
+{% endfor %}
+
+paths:
+{% for service in services %}
+  {% for method_name, signature in service.methods.items() %}
+  /{{ service.name }}/{{ method_name }}:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/{{ json_type(signature.return_annotation) }}'
+  {% endfor %}
+{% endfor %}

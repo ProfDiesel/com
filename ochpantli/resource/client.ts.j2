@@ -1,0 +1,55 @@
+// Generated code - DO NOT EDIT
+
+import { Request, Response, Client } from '../Common';
+
+{# ts_type #}
+{% macro ts_type(annotation) -%}
+  {%- if annotation is string_type -%} string
+  {%- elif annotation is record_type -%} {{ annotation.__name__ }}
+  {%- elif annotation is sub_type -%} {{ annotation.__name__ }}
+  {%- elif annotation is array_type -%} {{ ts_type(annotation | type_arg) }}List
+  {%- else -%} {{ annotation.__name__ }}
+  {%- endif -%}
+{%- endmacro -%}
+
+{# Annotations #}
+{% for annotation in walk() %}
+  {%- if annotation is record_type %}
+export interface {{ annotation.__name__ }} {
+    {%- for field in (annotation | fields) %}
+  {{ field.name }}:  {{ ts_type(field.type) }};
+    {%- endfor %}
+}
+  {% elif annotation is sub_type %}
+export type {{ annotation.__name__ }} = {{ ts_type(annotation | type_arg) }}
+  {% elif annotation is array_type %}
+export type {{ ts_type(annotation | type_arg) }}List = Array<{{ ts_type(annotation | type_arg) }}>
+  {%- endif %}
+{% endfor %}
+
+{# Services #}
+{% for service in services %}
+//
+// service {{ service.name }}
+  {% for method_name, signature in service.methods.items() %}
+
+// method {{ method_name}}
+interface {{ method_name | camelise }}Request extends Request {
+    {%- for parameter in signature | parameters %}
+  {{ parameter.name }}: {{ ts_type(parameter.annotation) }};
+    {%- endfor %}
+}
+interface {{ method_name | camelise }}Response extends Response {
+  value: {{ ts_type(signature.return_annotation) }};
+}
+  {%- endfor %}
+
+export class {{ service.name | camelise }}Client extends Client {
+  get service(): string { return '{{ service.name }}'; }
+  {% for method_name, signature in service.methods.items() -%}
+  async {{ method_name }}({{ signature | parameters | map(attribute='name') | join(', ') }}): Promise<{{ ts_type(signature.return_annotation)}}> {
+    return ((await this.request({ type: '{{ method_name }}', {% for parameter in signature | parameters %} {{ parameter.name }}: {{ parameter.name }}, {% endfor %} } as {{method_name | camelise }}Request)) as {{ method_name | camelise }}Response).value;
+  }
+  {%- endfor %}
+}
+{% endfor %}

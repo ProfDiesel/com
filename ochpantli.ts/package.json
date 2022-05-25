@@ -1,0 +1,33 @@
+{
+  "name": "com",
+  "version": "1.0.0",
+  "main": "dist/com.ts",
+  "bin": {
+    "topology": "./dist/server.js"
+  },
+  "scripts": {
+    "tsc": "tsc",
+    "test": "jest",
+    "test:watch": "npx test -- --watch"
+  },
+  "dependencies": {
+    "@msgpack/msgpack": "^2.7.2",
+    "@reduxjs/toolkit": "^1.8.1",
+    "@types/react": "^18.0.1",
+    "immer": "^9.0.12",
+    "ix": "^4.5.2",
+    "nats.ws": "^1.7.2",
+    "react": "^18.0.0",
+    "typescript": "^4.6.3",
+    "typescript-rest": "^3.0.4"
+  },
+  "types": "dist/com.d.ts",
+  "files": [
+    "./dist"
+  ],
+  "devDependencies": {
+    "@types/jest": "^27.5.1",
+    "ts-jest": "^28.0.2",
+    "ts-node": "^10.8.0"
+  }
+}
