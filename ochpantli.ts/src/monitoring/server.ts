@@ -4,7 +4,8 @@ import express from "express";
 import {Server, Path, GET } from "typescript-rest";
 
 import { combineReducers, createStore } from '@reduxjs/toolkit'
-import { componentListSlice, ComponentListState } from './ComponentListSlice';
+// @ts-ignore
+import { componentListSlice, ComponentListState } from './ComponentListSlice.ts';
 
 const reducer = combineReducers({
   componentList: componentListSlice.reducer,

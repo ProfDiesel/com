@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "loggers": {
+    "root": {
+      "handlers": "async_all"
+    }
+  },
+  "handlers": {
+    "console": {
+      "class": "j_logging.ConsoleHandler"
+    },
+    "file": {
+      "class": "logging.handlers.WatchedFileHandler",
+      "filename": "logs.json",
+      "formatter": "json"
+    },
+    "alerta": {
+      "class": "j_logging.AlertaHandler"
+    },
+    "async_all": {
+      "class": "j_logging.AsyncHandler",
+      "upstream_handlers": ["cfg://handlers.console", "cfg://handlers.file", "cfg://handlers.alerta"]
+    }
+  },
+  "formatters": {
+    "json": {
+      "class": "j_logging.JsonFormatter"
+    }
+  }
+}

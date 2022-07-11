@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ClientConnection, ServiceName } from '../types';
-import { Immutable } from '../misc/Immutable';
+// @ts-ignore
+import { ClientConnection, ServiceName } from '../types.ts';
+// @ts-ignore
+import { Immutable } from '../misc/Immutable.ts';
 /* // eslint-disable-next-line node/no-extraneous-import */
 import { Draft } from 'immer';
 

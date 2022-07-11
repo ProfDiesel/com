@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "loggers": {
+    "pipo": {
+      "handlers":  ["async_all"]
+    }
+  },
+  "handlers": {
+    "console": {
+      "class": "j_logging.ConsoleHandler"
+    },
+    "file": {
+      "class": "logging.handlers.WatchedFileHandler",
+      "filename": "logs.json",
+      "formatter": "json"
+    },
+    "async_all": {
+      "class": "j_logging.AsyncHandler",
+      "upstream_handlers": ["cfg://handlers.console", "cfg://handlers.file"]
+    }
+  },
+  "formatters": {
+    "json": {
+      "class": "j_logging.JsonFormatter"
+    }
+  }
+}

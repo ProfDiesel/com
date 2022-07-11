@@ -1,4 +1,4 @@
-from typing import List, NewType, Protocol
+from typing import List, Protocol
 from dataclasses import dataclass
 
 from com import server

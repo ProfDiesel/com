@@ -1,0 +1,15 @@
+'java -jar ./plantuml-1.2022.6.jar -DRELATIVE_INCLULDE="." -v ./frontend.puml
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(gui, "Web GUI", "React/Typescript")
+Container(product_service, "Product Service")
+Container(feed_service, "Feed Service")
+System(trep, "TREP")
+
+Rel(gui, product_service, "get_underlyings")
+Rel(gui, product_service, "get_products")
+Rel(gui, feed_service, "get_trep_info")
+Rel(gui, trep, "subscribe")
+
+@enduml

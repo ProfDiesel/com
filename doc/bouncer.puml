@@ -1,0 +1,31 @@
+'java -jar ./plantuml-1.2022.6.jar -DRELATIVE_INCLULDE="." -v ./frontend.puml
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(user, "Web GUI", "React/Typescript")
+Container(static_web_server, "Static Web server", "GET/Bottle/Python", "not secured")
+Container(bouncer, "REST/HTTPS", "Bottle/Python", "not secured")
+System(nats_server, "NATS server")
+
+Rel(bouncer, nats_server, "add user")
+
+Rel(static_web_server, user, "GET")
+Rel(user, bouncer, "login")
+Rel(bouncer, user, "401/Negotiate")
+
+Rel(user, bouncer, "login", "with Authorieation header: krb5"))
+' or
+Rel(user, bouncer, "login", "with Authorieation header: BasicAuth")) ' fallback
+
+Rel(nats_server, bouncer, "JWT bearer token")
+
+Rel(bouncer, user, "set_cookie bearer token, secure, httponly")
+Rel(user, nats_server, "token as cookie")
+' or
+Rel(bouncer, user, "set_cookie bearer token, NOT secure, NOT httponly")
+Rel(user, nats_server, "token as JWT")
+
+
+' TLS certif client, connexion direct à NATS
+
+@enduml

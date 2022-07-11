@@ -1,2 +1,4 @@
-export { Client } from "./Common"
-export { ClientConnection, ServiceName } from "./types"
+// @ts-ignore
+export { Client } from "./Common.ts"
+// @ts-ignore
+export { ClientConnection, ServiceName } from "./types.ts"
